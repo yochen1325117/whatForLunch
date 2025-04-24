@@ -7,6 +7,8 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
+    publicPath: "./", // 關鍵：GitHub Pages 用
+    clean: true,
   },
   module: {
     rules: [
