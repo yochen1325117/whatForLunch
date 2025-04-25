@@ -57,9 +57,6 @@ const App = () => {
         
         spinCountRef.current += 1;
         
-        // 減緩速度效果
-        const spinDelay = spinCountRef.current > maxSpins * 0.7 ? 100 + (spinCountRef.current - maxSpins * 0.7) * 20 : 100;
-        
         // 如果達到最大轉動次數，停止動畫並顯示最終結果
         if (spinCountRef.current >= maxSpins) {
           clearInterval(spinTimerRef.current);
@@ -83,12 +80,21 @@ const App = () => {
               setSelectedRestaurant(finalSelection);
               setIsSpinning(false);
             }
-          }, spinDelay);
+          }, calculateDelay(spinCountRef.current, 1/maxSpins));
         }
       }, 100);
     }
   };
 
+  const calculateDelay = (progress, step) => {
+    const easedProgress_current = ease(progress);
+    const easedProgress_next = ease(progress+step);
+    return 5*(1/(easedProgress_next-easedProgress_current));
+  };
+  const ease = (x) => {
+    x = x * 0.8 + 0.2;
+    return x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2;
+  };
   const handleRestaurantSelect = (value) => {
     setSelectedRestaurant(value);
   };
