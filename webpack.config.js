@@ -6,7 +6,7 @@ module.exports = {
   entry: './src/index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js',
+    filename: 'bundle.[contenthash].js',
     publicPath: "./", // 關鍵：GitHub Pages 用
     clean: true,
   },
