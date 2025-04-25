@@ -47,14 +47,14 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: './public/index.html',
+      template: './dist/index.html',
     }),
   ],
   devServer: {
     static: {
-      directory: path.join(__dirname, 'public'),
+      directory: path.join(__dirname, 'dist'),
     },
-    port: 3000,
+    port: 5999,
     hot: true,
     open: true,
   },

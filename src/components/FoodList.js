@@ -1,48 +1,73 @@
 import React, { useState } from 'react';
+import { Button, Card, Typography, List, Divider, Tag } from 'antd';
 
-const FoodList = ({ foods }) => {
+const { Title, Text } = Typography;
+
+const FoodList = ({ data }) => {
   const [selectedFood, setSelectedFood] = useState('');
+  
+  // 假設第一列是表頭
+  const headers = data[0] || [];
+  const foodItems = data.slice(1).map(row => {
+    const item = {};
+    headers.forEach((header, index) => {
+      item[header] = row[index];
+    });
+    return item;
+  });
 
   const handleRandomFood = () => {
-    const randomIndex = Math.floor(Math.random() * foods.length);
-    setSelectedFood(foods[randomIndex]);
+    const randomIndex = Math.floor(Math.random() * foodItems.length);
+    setSelectedFood(foodItems[randomIndex]);
   };
 
   return (
-    <div className="max-w-md mx-auto">
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <div className="mb-6">
-          <button
-            onClick={handleRandomFood}
-            className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-lg transition duration-200"
-          >
-            隨機選擇午餐
-          </button>
-        </div>
-
-        {selectedFood && (
-          <div className="text-center p-4 bg-blue-50 rounded-lg">
-            <p className="text-lg text-gray-700">今天吃：</p>
-            <p className="text-2xl font-bold text-blue-700 mt-2">{selectedFood}</p>
-          </div>
-        )}
-
-        <div className="mt-8">
-          <h2 className="text-xl font-semibold mb-4 text-gray-700">所有選項：</h2>
-          <ul className="grid grid-cols-2 gap-2">
-            {foods.map((food, index) => (
-              <li 
-                key={index} 
-                className="bg-gray-100 hover:bg-gray-200 rounded-md p-2 text-center cursor-pointer"
-                onClick={() => setSelectedFood(food)}
-              >
-                {food}
-              </li>
-            ))}
-          </ul>
-        </div>
+    <Card className="shadow-md">
+      <div className="mb-6">
+        <Button
+          type="primary"
+          size="large"
+          block
+          onClick={handleRandomFood}
+        >
+          隨機選擇午餐
+        </Button>
       </div>
-    </div>
+
+      {selectedFood && (
+        <Card className="mb-6 bg-blue-50">
+          <Title level={4}>今天吃：</Title>
+          <Title level={2} className="text-blue-700">
+            {selectedFood[headers[0]]}
+          </Title>
+          {headers.slice(1).map((header, index) => (
+            selectedFood[header] && (
+              <Tag color="blue" key={index}>
+                {header}: {selectedFood[header]}
+              </Tag>
+            )
+          ))}
+        </Card>
+      )}
+
+      <Divider>所有選項</Divider>
+      
+      <List
+        grid={{ gutter: 16, xs: 1, sm: 2, md: 2, lg: 3 }}
+        dataSource={foodItems}
+        renderItem={(item) => (
+          <List.Item>
+            <Card 
+              hoverable 
+              onClick={() => setSelectedFood(item)}
+              className="text-center"
+            >
+              {item[headers[0]]}
+            </Card>
+          </List.Item>
+        )}
+      />
+    </Card>
   );
 };
 
